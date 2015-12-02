@@ -23,13 +23,22 @@ var MailModel = {
         for (var i in this.messages){
             
             for ( var j in this.rules){
-                //if its spam no action
-                if (this.messages[i].search(this.rules[j]) != -1) {
-                    spam = true;
+                //if its mail spam
+                if(this.rules[j].from != undefined){ 
+                    if(this.messages[i].from.search(this.rules[j].from) != -1){
+                        spam = true;
+                    }
                 }
+                //if its subject spam
+                if(this.rules[j].subject != undefined){ 
+                    if (this.messages[i].subject.search(this.rules[j].subject) != -1) {
+                        spam = true;
+                    }
+                }
+                
             }
             //if it isnt spam then pushed into display array
-            if(!spam) {array.push( this.messages[i] ); }
+            if(!spam) {array.push( this.messages[i] );}
             spam = false;
         }
         return array;
@@ -46,12 +55,12 @@ var MailModel = {
 //view
 var MailView = {
     
-   htmlStr: "<li>FIELD</li>",
+   htmlStr: "<li>From: FFIELD, Subject: SFIELD</li>",
     
     render: function(array){
         $(".result").html("");
         for(var i in array){
-            $(".result").append(this.htmlStr.replace("FIELD",array[i]));
+            $(".result").append(this.htmlStr.replace("FFIELD",array[i].from).replace("SFIELD",array[i].subject));
         }
     }
     
